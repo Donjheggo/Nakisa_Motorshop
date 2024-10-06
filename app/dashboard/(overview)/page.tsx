@@ -1,11 +1,11 @@
 import DashboardCard from "@/components/admin/dashboard/dashboard-card";
-import { WashingMachine, LoaderPinwheel, Hand, Check } from "lucide-react";
 import AppointmentsTable from "@/components/admin/dashboard/appoinments-table";
-import ProductsTable from "@/components/admin/dashboard/products-table";
+import SalesTable from "@/components/admin/dashboard/sales-table";
 import { GetTotalAppointments } from "@/lib/actions/appointment";
 import { GetTotalProducts } from "@/lib/actions/products";
 import { GetTotalServices } from "@/lib/actions/services";
 import { GetTotalUsers } from "@/lib/actions/users";
+import { NotepadText, Bike, HandPlatter, UsersRound } from "lucide-react";
 
 export default async function Dashboard() {
   const [appointments, products, services, users] = await Promise.all([
@@ -19,22 +19,22 @@ export default async function Dashboard() {
     {
       title: "Total Appointments",
       number: appointments,
-      icon: <Hand size={25} className="text-primary" />,
+      icon: <NotepadText size={25} className="text-primary" />,
     },
     {
       title: "Total Products",
       number: products,
-      icon: <WashingMachine size={25} className="text-primary" />,
+      icon: <Bike size={25} className="text-primary" />,
     },
     {
       title: "Total Services",
       number: services,
-      icon: <LoaderPinwheel size={25} className="text-primary" />,
+      icon: <HandPlatter size={25} className="text-primary" />,
     },
     {
       title: "Total Users",
       number: users,
-      icon: <Check size={25} className="text-primary" />,
+      icon: <UsersRound size={25} className="text-primary" />,
     },
   ];
 
@@ -51,7 +51,7 @@ export default async function Dashboard() {
           <AppointmentsTable searchQuery="" page={1} />
         </div>
         <div className="w-full lg:w-[50%]">
-          <ProductsTable searchQuery="" page={1} />
+          <SalesTable searchQuery="" page={1} />
         </div>
       </div>
     </div>
