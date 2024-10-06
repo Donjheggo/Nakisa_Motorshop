@@ -125,13 +125,8 @@ export const adminLinks = [
 
 export const userLinks = [
   {
-    name: "Book Appointment",
+    name: "Appointments",
     href: "/",
     icon: <NotebookPen />,
-  },
-  {
-    name: "My Appointments",
-    href: "/appointments",
-    icon: <NotebookText />,
   },
 ];

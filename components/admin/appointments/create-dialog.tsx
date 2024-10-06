@@ -105,7 +105,7 @@ export default function CreateAppointmentDialog() {
               <Input
                 name="contact_number"
                 id="contact_number"
-                type="tel"
+                type="number"
                 placeholder=""
                 className="col-span-3"
                 required

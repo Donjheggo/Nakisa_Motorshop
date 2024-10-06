@@ -50,7 +50,7 @@ export async function CreateAppointment(formData: FormData) {
     if (error) {
       return { error: error.message };
     }
-    revalidatePath("/appointments");
+    revalidatePath("/");
     revalidatePath("/dashboard/appointments");
     return { error: "" };
   } catch (error) {
@@ -95,7 +95,6 @@ export async function UpdateAppointment(formData: FormData) {
     if (error) {
       return { error: error.message };
     }
-    revalidatePath("/appointments");
     revalidatePath("/dashboard/appointments");
     return { error: "" };
   } catch (error) {
@@ -134,5 +133,26 @@ export async function GetTotalAppointments() {
   } catch (error) {
     console.error(error);
     return 0;
+  }
+}
+
+export async function GetMyAppointments() {
+  try {
+    const supabase = createClient();
+    const { data: userData } = await supabase.auth.getUser();
+    const { data, error } = await supabase
+      .from("appointments")
+      .select("*")
+      .eq("user_id", userData?.user?.id || "");
+
+    if (error) {
+      console.error(error);
+      return [];
+    }
+
+    return data || [];
+  } catch (error) {
+    console.error(error);
+    return [];
   }
 }
