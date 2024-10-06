@@ -106,7 +106,7 @@ export async function UpdateAppointment(formData: FormData) {
 export async function DeleteAppointment(id: string) {
   try {
     const supabase = createClient();
-    const { error } = await supabase.from("appointment").delete().eq("id", id);
+    const { error } = await supabase.from("appointments").delete().eq("id", id);
 
     if (error) {
       return { error: error.message };

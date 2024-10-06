@@ -8,6 +8,7 @@ import {
   Bike,
   HandPlatter,
   NotebookText,
+  PhilippinePeso,
 } from "lucide-react";
 import { ThemeToggler } from "../themes/theme-toggler";
 import { signout } from "@/lib/actions/auth";
@@ -101,6 +102,11 @@ export const adminLinks = [
     icon: <Bike />,
   },
   {
+    name: "Sales",
+    href: "/dashboard/sales",
+    icon: <PhilippinePeso />,
+  },
+  {
     name: "Services",
     href: "/dashboard/services",
     icon: <HandPlatter />,
@@ -122,5 +128,10 @@ export const userLinks = [
     name: "Book Appointment",
     href: "/",
     icon: <NotebookPen />,
+  },
+  {
+    name: "My Appointments",
+    href: "/appointments",
+    icon: <NotebookText />,
   },
 ];

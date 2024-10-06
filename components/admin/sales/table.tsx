@@ -10,7 +10,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
@@ -21,15 +20,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { GetUsers, GetTotalUsers } from "@/lib/actions/users";
 import { TablePagination } from "./pagination";
-import { Badge } from "../../ui/badge";
-import UpdateButton from "./update-button";
 import DeleteButton from "./delete-button";
 import { MoreHorizontal } from "lucide-react";
 import { Button } from "../../ui/button";
+import { DropdownMenuSeparator } from "@radix-ui/react-dropdown-menu";
+import UpdateButton from "./update-button";
+import { GetSales, GetTotalSales } from "@/lib/actions/sales";
 
-export default async function UsersTable({
+export default async function SalesTable({
   searchQuery,
   page,
 }: {
@@ -38,36 +37,53 @@ export default async function UsersTable({
 }) {
   const items_per_page = 7;
 
-  const [totalUsers, users] = await Promise.all([
-    GetTotalUsers(),
-    GetUsers(searchQuery, page, items_per_page),
+  const [totalSales, sales] = await Promise.all([
+    GetTotalSales(),
+    GetSales(searchQuery, page, items_per_page),
   ]);
 
-  const totalPages = Math.ceil(totalUsers / items_per_page);
+  const totalPages = Math.ceil(totalSales / items_per_page);
+
+  console.log("Total Sales", totalSales);
+  console.log("Total Pages", totalPages);
+
   return (
     <Card className="w-full shadow-none bg-background">
       <CardHeader>
-        <CardTitle>Users</CardTitle>
-        <CardDescription>Manage users role.</CardDescription>
+        <CardTitle>Sales</CardTitle>
+        <CardDescription>Manage sales.</CardDescription>
       </CardHeader>
       <CardContent>
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="table-cell">Email</TableHead>
-              <TableHead className="table-cell">Role</TableHead>
+              <TableHead className="table-cell">Name</TableHead>
+              <TableHead className="table-cell">Product</TableHead>
+              <TableHead className="table-cell">Price</TableHead>
+              <TableHead className="table-cell">Quantity</TableHead>
+              <TableHead className="table-cell">Total Price</TableHead>
               <TableHead>
                 <span className="sr-only">Actions</span>
               </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {users?.map((item, index) => (
+            {sales?.map((item, index) => (
               <TableRow key={index}>
-                <TableCell className="font-normal">{item.email}</TableCell>
-                <TableCell className="font-normal">
-                  <Badge>{item.role} </Badge>
+                <TableCell className="font-semibold text-lg">
+                  {item.name}
                 </TableCell>
+                <TableCell className="font-normal">
+                  {item.product_id.name}
+                </TableCell>
+                <TableCell className="font-normal">
+                  ₱{item.product_id.price}
+                </TableCell>
+                <TableCell className="font-normal">{item.quantity}</TableCell>
+                <TableCell className="font-normal">
+                  ₱{item.product_id.price * item.quantity}
+                </TableCell>
+
                 <TableCell>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -94,9 +110,9 @@ export default async function UsersTable({
       </CardContent>
       <CardFooter>
         <div className="text-xs text-muted-foreground">
-          Showing <strong>{(page - 1) * items_per_page + 1}</strong>-
-          <strong>{Math.min(page * items_per_page, totalUsers)}</strong> of{" "}
-          <strong>{totalUsers}</strong> users
+          <strong>{(page - 1) * items_per_page + 1}</strong>-
+          <strong>{Math.min(page * items_per_page, totalSales)}</strong> of{" "}
+          <strong>{totalSales}</strong>
         </div>
         <div className="ml-auto">
           <TablePagination totalPages={totalPages} />

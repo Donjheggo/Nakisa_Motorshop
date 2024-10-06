@@ -3,7 +3,7 @@
 import { createClient } from "../supabase/server";
 import { revalidatePath } from "next/cache";
 
-export async function GetProducts(
+export async function GetSales(
   searchQuery: string,
   page: number,
   items_per_page: number
@@ -11,8 +11,8 @@ export async function GetProducts(
   try {
     const supabase = createClient();
     const query = supabase
-      .from("products")
-      .select(`*`)
+      .from("sales")
+      .select(`*, product_id(name, quantity, price)`)
       .order("name", { ascending: true })
       .range((page - 1) * items_per_page, page * items_per_page - 1);
 
@@ -32,34 +32,34 @@ export async function GetProducts(
   }
 }
 
-export async function CreateProduct(formData: FormData) {
+export async function CreateSale(formData: FormData) {
   try {
     const supabase = createClient();
     const { error } = await supabase
-      .from("products")
+      .from("sales")
       .insert({
         name: formData.get("name"),
-        price: formData.get("price"),
         quantity: formData.get("quantity"),
+        product_id: formData.get("product_id"),
       })
       .select();
 
     if (error) {
       return { error: error.message };
     }
-    revalidatePath("/products");
-    revalidatePath("/dashboard/products");
+    revalidatePath("/sales");
+    revalidatePath("/dashboard/sales");
     return { error: "" };
   } catch (error) {
     return { error: error };
   }
 }
 
-export async function GetProductById(id: string) {
+export async function GetSaleById(id: string) {
   try {
     const supabase = createClient();
     const { error, data } = await supabase
-      .from("products")
+      .from("sales")
       .select("*")
       .eq("id", id)
       .single();
@@ -73,15 +73,15 @@ export async function GetProductById(id: string) {
   }
 }
 
-export async function UpdateProduct(formData: FormData) {
+export async function UpdateSales(formData: FormData) {
   try {
     const supabase = createClient();
     const { error } = await supabase
-      .from("products")
+      .from("sales")
       .update({
         name: formData.get("name"),
-        price: formData.get("price"),
         quantity: formData.get("quantity"),
+        product_id: formData.get("product_id"),
       })
       .eq("id", formData.get("id"))
       .select();
@@ -89,35 +89,35 @@ export async function UpdateProduct(formData: FormData) {
     if (error) {
       return { error: error };
     }
-    revalidatePath("/products");
-    revalidatePath("/dashboard/products");
+    revalidatePath("/sales");
+    revalidatePath("/dashboard/sales");
     return { error: "" };
   } catch (error) {
     return { error: error };
   }
 }
 
-export async function DeleteProduct(id: string) {
+export async function DeleteSale(id: string) {
   try {
     const supabase = createClient();
-    const { error } = await supabase.from("products").delete().eq("id", id);
+    const { error } = await supabase.from("sales").delete().eq("id", id);
 
     if (error) {
       return { error: error };
     }
-    revalidatePath("/products");
-    revalidatePath("/dashboard/products");
+    revalidatePath("/sales");
+    revalidatePath("/dashboard/sales");
     return { error: "" };
   } catch (error) {
     return { error: error };
   }
 }
 
-export async function GetTotalProducts() {
+export async function GetTotalSales() {
   try {
     const supabase = createClient();
 
-    const { data, error } = await supabase.from("products").select("*");
+    const { data, error } = await supabase.from("sales").select("*");
 
     if (error) {
       console.error(error);
@@ -128,23 +128,5 @@ export async function GetTotalProducts() {
   } catch (error) {
     console.error(error);
     return 0;
-  }
-}
-
-export async function GetAllProducts() {
-  try {
-    const supabase = createClient();
-
-    const { data, error } = await supabase.from("products").select("*");
-
-    if (error) {
-      console.error(error);
-      return [];
-    }
-
-    return data || [];
-  } catch (error) {
-    console.error(error);
-    return [];
   }
 }

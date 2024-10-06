@@ -1,14 +1,14 @@
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
-import UpdateProductForm from "@/components/admin/products/update-form";
-import { GetProductById } from "@/lib/actions/products";
+import UpdateSaleForm from "@/components/admin/sales/update-form";
+import { GetSaleById } from "@/lib/actions/sales";
 
-export default async function UpdateProduct({
+export default async function UpdateSale({
   params,
 }: {
   params: { id: string };
 }) {
-  const appointment = await GetProductById(params.id);
+  const appointment = await GetSaleById(params.id);
 
   return (
     <div>
@@ -18,7 +18,7 @@ export default async function UpdateProduct({
       </Link>
       <h1 className="text-center text-2xl">Update</h1>
       <div className="mt-5">
-        <UpdateProductForm item={appointment} />
+        <UpdateSaleForm item={appointment} />
       </div>
     </div>
   );
