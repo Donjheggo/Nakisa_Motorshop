@@ -12,7 +12,7 @@ export async function GetAppointments(
     const supabase = createClient();
     const query = supabase
       .from("appointments")
-      .select(`*`)
+      .select(`*, service_id(name)`)
       .order("name", { ascending: true })
       .range((page - 1) * items_per_page, page * items_per_page - 1);
 
@@ -38,11 +38,12 @@ export async function CreateAppointment(formData: FormData) {
     const { error } = await supabase
       .from("appointments")
       .insert({
+        user_id: formData.get("user_id"),
         name: formData.get("name"),
         contact_number: formData.get("contact_number"),
         service_id: formData.get("service_id"),
         schedule: formData.get("schedule"),
-        prodblem: formData.get("prodblem"),
+        problem: formData.get("problem"),
       })
       .select();
 
@@ -85,13 +86,14 @@ export async function UpdateAppointment(formData: FormData) {
         contact_number: formData.get("contact_number"),
         service_id: formData.get("service_id"),
         schedule: formData.get("schedule"),
-        prodblem: formData.get("prodblem"),
+        problem: formData.get("problem"),
+        completed: formData.get("completed"),
       })
       .eq("id", formData.get("id"))
       .select();
 
     if (error) {
-      return { error: error };
+      return { error: error.message };
     }
     revalidatePath("/appointments");
     revalidatePath("/dashboard/appointments");
@@ -107,7 +109,7 @@ export async function DeleteAppointment(id: string) {
     const { error } = await supabase.from("appointment").delete().eq("id", id);
 
     if (error) {
-      return { error: error };
+      return { error: error.message };
     }
     revalidatePath("/appointments");
     revalidatePath("/dashboard/appointments");

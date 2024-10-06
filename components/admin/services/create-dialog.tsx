@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -11,25 +10,24 @@ import {
   DialogTrigger,
   DialogClose,
 } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { CreateReport } from "@/lib/actions/reports";
+import { Input } from "@/components/ui/input";
+import { Plus } from "lucide-react";
+import { CreateService } from "@/lib/actions/services";
 import { toast } from "react-toastify";
-import { useUser } from "@/context/user-context";
 
-export default function CreateDialog() {
-  const { user, loading } = useUser();
+export default function CreateServiceDialog() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-
-    if (!formData.get("message")) {
+    if (!formData.get("name")) {
       toast.error("Please fill in all the required fields correctly.");
       return;
     }
 
     try {
-      const { error } = await CreateReport(formData);
+      const { error } = await CreateService(formData);
       if (error) {
         toast.error(error.toString());
       }
@@ -38,17 +36,11 @@ export default function CreateDialog() {
     }
   };
 
-  if (loading) return;
-
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button
-          size="lg"
-          variant="default"
-          className="flex items-center w-full"
-        >
-          Create New Report
+        <Button variant="default" className="flex items-center">
+          <Plus size={18} className="mr-2" /> New Service
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
@@ -61,14 +53,14 @@ export default function CreateDialog() {
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="message" className="text-right">
-                Message
+              <Label htmlFor="name" className="text-right">
+                Service name
               </Label>
-              <input name="user_id" defaultValue={user?.id} hidden />
-              <Textarea
-                name="message"
-                id="message"
-                placeholder="Write message here"
+              <Input
+                name="name"
+                id="name"
+                type="text"
+                placeholder="Engine Oil"
                 className="col-span-3"
                 required
               />

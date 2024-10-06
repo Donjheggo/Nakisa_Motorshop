@@ -1,81 +1,58 @@
 import DashboardCard from "@/components/admin/dashboard/dashboard-card";
-import {
-  HandPlatter,
-  HousePlus,
-  UsersRound,
-  UserRound,
-  MessageSquareWarning,
-  FilePlus,
-} from "lucide-react";
-import { GetTotalServices } from "@/lib/actions/services";
-import { GetTotalPuroks } from "@/lib/actions/purok";
-import { GetTotalResidents } from "@/lib/actions/residents";
-import { GetTotalOfficial } from "@/lib/actions/officials";
-import { GetTotalReports } from "@/lib/actions/reports";
+import { WashingMachine, LoaderPinwheel, Hand, Check } from "lucide-react";
+import AppointmentsTable from "@/components/admin/dashboard/appoinments-table";
+import ProductsTable from "@/components/admin/dashboard/products-table";
 import { GetTotalAppointments } from "@/lib/actions/appointment";
+import { GetTotalProducts } from "@/lib/actions/products";
+import { GetTotalServices } from "@/lib/actions/services";
+import { GetTotalUsers } from "@/lib/actions/users";
 
 export default async function Dashboard() {
-  // const [services, puroks, residents, officials, reports, appointments] =
-  //   await Promise.all([
-  //     GetTotalServices(),
-  //     GetTotalPuroks(),
-  //     GetTotalResidents(),
-  //     GetTotalOfficial(),
-  //     GetTotalReports(),
-  //     GetTotalAppointments(),
-  //   ]);
+  const [appointments, products, services, users] = await Promise.all([
+    GetTotalAppointments(),
+    GetTotalProducts(),
+    GetTotalServices(),
+    GetTotalUsers(),
+  ]);
 
   const cards = [
     {
-      title: "Services",
-      number: 22,
-      icon: <HandPlatter size={18} className="text-primary" />,
-      href: "/dashboard/services",
+      title: "Total Appointments",
+      number: appointments,
+      icon: <Hand size={25} className="text-primary" />,
     },
     {
-      title: "Puroks",
-      number: 33,
-      icon: <HousePlus size={18} className="text-primary" />,
-      href: "/dashboard/puroks",
+      title: "Total Products",
+      number: products,
+      icon: <WashingMachine size={25} className="text-primary" />,
     },
     {
-      title: "Residents",
-      number: 44,
-      icon: <UsersRound size={18} className="text-primary" />,
-      href: "/dashboard/residents",
+      title: "Total Services",
+      number: services,
+      icon: <LoaderPinwheel size={25} className="text-primary" />,
     },
     {
-      title: "Officials",
-      number: 66,
-      icon: <UserRound size={18} className="text-primary" />,
-      href: "/dashboard/officials",
-    },
-    {
-      title: "Reports",
-      number: 55,
-      icon: <MessageSquareWarning size={18} className="text-primary" />,
-      href: "/dashboard/reports",
-    },
-    {
-      title: "Appointments",
-      number: 77,
-      icon: <FilePlus size={18} className="text-primary" />,
-      href: "/dashboard/appointments",
+      title: "Total Users",
+      number: users,
+      icon: <Check size={25} className="text-primary" />,
     },
   ];
 
   return (
-    <div className="container mx-auto max-w-screen-lg">
-      <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-8 text-center text-primary">
-        Welcome Admin
-      </h1>
-      <p className="text-xl text-center mb-12 text-muted-foreground">
-        View and manage all the data.
-      </p>
-      <div className="grid gap-4 grid-cols-1 md:grid-cols-2 mt-4">
+    <div className="container mx-auto max-w-screen-2xl">
+      <h1 className="text-center text-2xl">Dashboard</h1>
+      <div className="grid gap-4 grid-cols-2 md:grid-cols-2 xl:grid-cols-4 mt-4">
         {cards.map((item, index) => (
           <DashboardCard key={index} item={item} />
         ))}
+      </div>
+      <div className="flex flex-1 flex-col lg:flex-row gap-4 mt-4">
+        <div className="w-full">
+          <AppointmentsTable searchQuery="" page={1} />
+        </div>
+        <div className="w-full lg:w-[50%]">
+          <ProductsTable searchQuery="" page={1} />
+        </div>
       </div>
     </div>
   );

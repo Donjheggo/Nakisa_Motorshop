@@ -18,39 +18,40 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import { Plus } from "lucide-react";
-import { CreateAppointment } from "@/lib/actions/appointment";
 import { toast } from "react-toastify";
-import { useUser } from "@/context/user-context";
-import { GetAllResidents } from "@/lib/actions/residents";
-import { GetAllServices } from "@/lib/actions/services";
+import { CreateAppointment } from "@/lib/actions/appointment";
 import { useEffect, useState } from "react";
 import { Tables } from "@/database.types";
+import { GetAllServices } from "@/lib/actions/services";
+import { useUser } from "@/context/user-context";
 
-export default function CreateDialog() {
-  const { loading, user } = useUser();
-  const [services, setServices] = useState<ServiceT[]>([]);
-  const [residents, setResidents] = useState<ResidentsT[]>([]);
+export default function CreateAppointmentDialog() {
+  const { user, loading } = useUser();
+  const [services, setServices] = useState<AppointmentT[]>([]);
 
   useEffect(() => {
-    const fetchServiceAndResidents = async () => {
-      const [services, residents] = await Promise.all([
-        GetAllServices(),
-        GetAllResidents(),
-      ]);
-      if (services) setServices(services);
-      if (residents) setResidents(residents);
+    const fetchServices = async () => {
+      const data = await GetAllServices();
+      if (data) setServices(data);
     };
-
-    fetchServiceAndResidents();
+    fetchServices();
   }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    if (!formData.get("resident_id") || !formData.get("service_id")) {
+    if (
+      !formData.get("name") ||
+      !formData.get("contact_number") ||
+      !formData.get("service_id") ||
+      !formData.get("schedule") ||
+      !formData.get("problem")
+    ) {
       toast.error("Please fill in all the required fields correctly.");
       return;
     }
@@ -65,29 +66,55 @@ export default function CreateDialog() {
     }
   };
 
-  if (loading) return;
+  if (loading) return <div>Loading...</div>;
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button size="lg" variant="default" className="flex items-center w-full">
+        <Button variant="default" className="flex items-center">
           <Plus size={18} className="mr-2" /> New Appointment
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
-            <DialogTitle>Create Service</DialogTitle>
+            <DialogTitle>Create Appointment</DialogTitle>
             <DialogDescription>
               Complete the fields and hit create.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="name" className="text-right">
+                Full name
+              </Label>
+              <input name="user_id" defaultValue={user?.id} hidden />
+              <Input
+                name="name"
+                id="name"
+                type="text"
+                placeholder=""
+                className="col-span-3"
+                required
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="contact_number" className="text-right">
+                Contact number
+              </Label>
+              <Input
+                name="contact_number"
+                id="contact_number"
+                type="tel"
+                placeholder=""
+                className="col-span-3"
+                required
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="service_id" className="text-right">
                 Service
               </Label>
-              <input name="user_id" defaultValue={user?.id} hidden />
               <div className="col-span-3">
                 <Select name="service_id">
                   <SelectTrigger className="w-full">
@@ -106,25 +133,29 @@ export default function CreateDialog() {
               </div>
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="resident_id" className="text-right">
-                Resident
+              <Label htmlFor="schedule" className="text-right">
+                Schedule
               </Label>
-              <div className="col-span-3">
-                <Select name="resident_id">
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select Service" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      {residents.map((item, index) => (
-                        <SelectItem key={index} value={item.id}>
-                          {item.name}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              </div>
+              <Input
+                name="schedule"
+                id="schedule"
+                type="datetime-local"
+                placeholder=""
+                className="col-span-3"
+                required
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="problem" className="text-right">
+                Problem
+              </Label>
+              <Textarea
+                name="problem"
+                id="problem"
+                placeholder=""
+                className="col-span-3"
+                required
+              />
             </div>
           </div>
           <DialogFooter>
@@ -138,5 +169,4 @@ export default function CreateDialog() {
   );
 }
 
-export type ResidentsT = Tables<"residents">;
-type ServiceT = Tables<"services">;
+export type AppointmentT = Tables<"appointments">;

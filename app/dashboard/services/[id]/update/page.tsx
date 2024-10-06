@@ -1,14 +1,14 @@
-import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { GetAppointmentById } from "@/lib/actions/appointment";
-import UpdateAppointmentForm from "@/components/admin/appointments/update-form";
+import Link from "next/link";
+import UpdateServiceForm from "@/components/admin/services/update-form";
+import { GetServiceById } from "@/lib/actions/services";
 
 export default async function UpdateService({
   params,
 }: {
   params: { id: string };
 }) {
-  const appointment = await GetAppointmentById(params.id);
+  const appointment = await GetServiceById(params.id);
 
   return (
     <div>
@@ -18,7 +18,7 @@ export default async function UpdateService({
       </Link>
       <h1 className="text-center text-2xl">Update</h1>
       <div className="mt-5">
-        <UpdateAppointmentForm item={appointment} />
+        <UpdateServiceForm item={appointment} />
       </div>
     </div>
   );

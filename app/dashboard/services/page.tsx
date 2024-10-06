@@ -1,7 +1,6 @@
 import SearchBar from "@/components/search-bar";
-import AppointmentsTable from "@/components/admin/appointments/table";
-import CreateAppointmentDialog from "@/components/admin/appointments/create-dialog";
-
+import ServicesTable from "@/components/admin/services/table";
+import CreateDialog from "@/components/admin/services/create-dialog";
 export default function Residents({
   searchParams,
 }: {
@@ -11,15 +10,15 @@ export default function Residents({
   const page = Number(searchParams?.page) || 1;
 
   return (
-    <div className="container max-w-screen-lg mx-auto">
-      <h1 className="text-center text-2xl">Appointments</h1>
+    <div className="container max-w-screen-md mx-auto">
+      <h1 className="text-center text-2xl">Services</h1>
       <div className="mt-5">
         <div className="flex items-center justify-between">
           <SearchBar />
-          <CreateAppointmentDialog />
+          <CreateDialog />
         </div>
         <div className="mt-2">
-          <AppointmentsTable searchQuery={searchQuery} page={page} />
+          <ServicesTable searchQuery={searchQuery} page={page} />
         </div>
       </div>
     </div>

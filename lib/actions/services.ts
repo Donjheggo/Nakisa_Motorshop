@@ -126,3 +126,21 @@ export async function GetTotalServices() {
     return 0;
   }
 }
+
+export async function GetAllServices() {
+  try {
+    const supabase = createClient();
+
+    const { data, error } = await supabase.from("services").select("*");
+
+    if (error) {
+      console.error(error);
+      return [];
+    }
+
+    return data || [];
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+}

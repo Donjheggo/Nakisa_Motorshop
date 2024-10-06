@@ -33,7 +33,7 @@ export async function GetUsers(
   }
 }
 
-export async function TotalUsers() {
+export async function GetTotalUsers() {
   try {
     const supabase = createClient();
     const { data, error } = await supabase

@@ -11,6 +11,7 @@ export type Database = {
     Tables: {
       appointments: {
         Row: {
+          completed: boolean
           contact_number: number
           created_at: string
           id: string
@@ -18,8 +19,10 @@ export type Database = {
           problem: string
           schedule: string
           service_id: string
+          user_id: string
         }
         Insert: {
+          completed?: boolean
           contact_number: number
           created_at?: string
           id?: string
@@ -27,8 +30,10 @@ export type Database = {
           problem: string
           schedule: string
           service_id?: string
+          user_id?: string
         }
         Update: {
+          completed?: boolean
           contact_number?: number
           created_at?: string
           id?: string
@@ -36,6 +41,7 @@ export type Database = {
           problem?: string
           schedule?: string
           service_id?: string
+          user_id?: string
         }
         Relationships: [
           {
@@ -43,6 +49,13 @@ export type Database = {
             columns: ["service_id"]
             isOneToOne: false
             referencedRelation: "services"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "appointments_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
             referencedColumns: ["id"]
           },
         ]
