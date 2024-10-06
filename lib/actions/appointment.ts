@@ -143,7 +143,8 @@ export async function GetMyAppointments() {
     const { data, error } = await supabase
       .from("appointments")
       .select("*")
-      .eq("user_id", userData?.user?.id || "");
+      .eq("user_id", userData?.user?.id || "")
+      .order("created_at", { ascending: false });
 
     if (error) {
       console.error(error);
