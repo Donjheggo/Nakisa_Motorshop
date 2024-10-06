@@ -27,7 +27,6 @@ import { MoreHorizontal } from "lucide-react";
 import { Button } from "../../ui/button";
 import { DropdownMenuSeparator } from "@radix-ui/react-dropdown-menu";
 import UpdateButton from "./update-button";
-import { Badge } from "../../ui/badge";
 
 export default async function ProductsTable({
   searchQuery,
