@@ -27,6 +27,7 @@ import { MoreHorizontal } from "lucide-react";
 import { Button } from "../../ui/button";
 import { DropdownMenuSeparator } from "@radix-ui/react-dropdown-menu";
 import UpdateButton from "./update-button";
+import { Badge } from "@/components/ui/badge";
 
 export default async function ServicesTable({
   searchQuery,
@@ -54,6 +55,8 @@ export default async function ServicesTable({
           <TableHeader>
             <TableRow>
               <TableHead className="table-cell">Name</TableHead>
+              <TableHead className="table-cell">Duration</TableHead>
+              <TableHead className="table-cell">Availability</TableHead>
 
               <TableHead>
                 <span className="sr-only">Actions</span>
@@ -65,6 +68,16 @@ export default async function ServicesTable({
               <TableRow key={index}>
                 <TableCell>
                   <p className="font-semibold text-lg">{item.name}</p>
+                </TableCell>
+                <TableCell>
+                  <p>{item.duration}</p>
+                </TableCell>
+                <TableCell>
+                  {item.available ? (
+                    <Badge variant="default">Available</Badge>
+                  ) : (
+                    <Badge variant="outline">Unavailable</Badge>
+                  )}
                 </TableCell>
                 <TableCell>
                   <DropdownMenu>
