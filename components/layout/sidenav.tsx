@@ -9,6 +9,7 @@ import {
   HandPlatter,
   NotebookText,
   PhilippinePeso,
+  CalendarDays,
 } from "lucide-react";
 import { ThemeToggler } from "../themes/theme-toggler";
 import { signout } from "@/lib/actions/auth";
@@ -110,6 +111,11 @@ export const adminLinks = [
     name: "Services",
     href: "/dashboard/services",
     icon: <HandPlatter />,
+  },
+  {
+    name: "Schedules",
+    href: "/dashboard/schedules",
+    icon: <CalendarDays />,
   },
   {
     name: "Appointments",
