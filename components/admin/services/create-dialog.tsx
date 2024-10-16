@@ -21,7 +21,7 @@ export default function CreateServiceDialog() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    if (!formData.get("name")) {
+    if (!formData.get("name") || !formData.get("duration")) {
       toast.error("Please fill in all the required fields correctly.");
       return;
     }
@@ -61,6 +61,19 @@ export default function CreateServiceDialog() {
                 id="name"
                 type="text"
                 placeholder="Engine Oil"
+                className="col-span-3"
+                required
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="duration" className="text-right">
+                Duration
+              </Label>
+              <Input
+                name="duration"
+                id="duration"
+                type="text"
+                placeholder=""
                 className="col-span-3"
                 required
               />

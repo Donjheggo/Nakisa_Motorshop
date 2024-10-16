@@ -39,6 +39,8 @@ export async function CreateService(formData: FormData) {
       .from("services")
       .insert({
         name: formData.get("name"),
+        duration: formData.get("duration"),
+        available: true,
       })
       .select();
 
@@ -78,6 +80,8 @@ export async function UpdateService(formData: FormData) {
       .from("services")
       .update({
         name: formData.get("name"),
+        duration: formData.get("duration"),
+        available: formData.get("available"),
       })
       .eq("id", formData.get("id"))
       .select();
