@@ -29,10 +29,14 @@ import { useEffect, useState } from "react";
 import { Tables } from "@/database.types";
 import { GetAllServices } from "@/lib/actions/services";
 import { useUser } from "@/context/user-context";
+import { GetScheduleByServiceId } from "@/lib/actions/schedule";
+import type { SchedulesT } from "../schedules/update-form";
 
 export default function CreateAppointmentDialog() {
   const { user, loading } = useUser();
   const [services, setServices] = useState<AppointmentT[]>([]);
+  const [serviceId, setServiceId] = useState<string>("");
+  const [schedules, setSchedules] = useState<SchedulesT[]>();
 
   useEffect(() => {
     const fetchServices = async () => {
@@ -42,6 +46,14 @@ export default function CreateAppointmentDialog() {
     fetchServices();
   }, []);
 
+  useEffect(() => {
+    const fetchSchedule = async () => {
+      const data = await GetScheduleByServiceId(serviceId);
+      if (data) setSchedules(data);
+    };
+    fetchSchedule();
+  }, [serviceId]);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -49,7 +61,7 @@ export default function CreateAppointmentDialog() {
       !formData.get("name") ||
       !formData.get("contact_number") ||
       !formData.get("service_id") ||
-      !formData.get("schedule") ||
+      !formData.get("schedule_id") ||
       !formData.get("problem")
     ) {
       toast.error("Please fill in all the required fields correctly.");
@@ -116,7 +128,10 @@ export default function CreateAppointmentDialog() {
                 Service
               </Label>
               <div className="col-span-3">
-                <Select name="service_id">
+                <Select
+                  name="service_id"
+                  onValueChange={(value) => setServiceId(value)}
+                >
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select Service" />
                   </SelectTrigger>
@@ -133,17 +148,28 @@ export default function CreateAppointmentDialog() {
               </div>
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="schedule" className="text-right">
+              <Label htmlFor="schedule_id" className="text-right">
                 Schedule
               </Label>
-              <Input
-                name="schedule"
-                id="schedule"
-                type="datetime-local"
-                placeholder=""
-                className="col-span-3"
-                required
-              />
+              <div className="col-span-3">
+                <Select name="schedule_id">
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select Schedule" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {schedules?.map((item, index) => (
+                        <SelectItem key={index} value={item.id}>
+                          {new Date(item.start_time).toLocaleDateString()} -{" "}
+                          {new Date(item.start_time).toLocaleTimeString()} <br/>
+                          {new Date(item.end_time).toLocaleDateString()} -{" "}
+                          {new Date(item.end_time).toLocaleTimeString()}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="problem" className="text-right">

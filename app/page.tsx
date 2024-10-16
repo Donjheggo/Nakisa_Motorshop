@@ -1,7 +1,7 @@
 import AppointmentCard from "@/components/admin/appointments/appointment-card";
 import CreateAppointmentDialog from "@/components/admin/appointments/create-dialog";
-import { ServiceT } from "@/components/admin/services/update-form";
 import { GetMyAppointments } from "@/lib/actions/appointment";
+import type { Tables } from "@/database.types";
 
 export default async function Home() {
   const appointments = await GetMyAppointments();
@@ -20,6 +20,8 @@ export default async function Home() {
   );
 }
 
+type ServiceT = Tables<'services'>
+type ScheduleT = Tables<'schedules'>
 export type AppointmentT = {
   completed: boolean;
   contact_number: number;
@@ -27,7 +29,7 @@ export type AppointmentT = {
   id: string;
   name: string;
   problem: string;
-  schedule: string;
+  schedule_id: ScheduleT;
   service_id: ServiceT;
   user_id: string;
 };

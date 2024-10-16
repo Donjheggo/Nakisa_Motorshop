@@ -17,7 +17,7 @@ export type Database = {
           id: string
           name: string
           problem: string
-          schedule: string
+          schedule_id: string
           service_id: string
           user_id: string
         }
@@ -28,7 +28,7 @@ export type Database = {
           id?: string
           name: string
           problem: string
-          schedule: string
+          schedule_id?: string
           service_id?: string
           user_id?: string
         }
@@ -39,11 +39,18 @@ export type Database = {
           id?: string
           name?: string
           problem?: string
-          schedule?: string
+          schedule_id?: string
           service_id?: string
           user_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "appointments_schedule_id_fkey"
+            columns: ["schedule_id"]
+            isOneToOne: false
+            referencedRelation: "schedules"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "appointments_service_id_fkey"
             columns: ["service_id"]

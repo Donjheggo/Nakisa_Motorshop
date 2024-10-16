@@ -148,3 +148,20 @@ export async function GetAllProducts() {
     return [];
   }
 }
+
+export async function GetScheduleByServiceId(service_id: string) {
+  try {
+    const supabase = createClient();
+    const { error, data } = await supabase
+      .from("schedules")
+      .select("*")
+      .eq("service_id", service_id);
+
+    if (error) {
+      return [];
+    }
+    return data || [];
+  } catch (error) {
+    return [];
+  }
+}

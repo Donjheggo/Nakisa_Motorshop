@@ -12,7 +12,7 @@ export async function GetAppointments(
     const supabase = createClient();
     const query = supabase
       .from("appointments")
-      .select(`*, service_id(name)`)
+      .select(`*, service_id(name), schedule_id(*)`)
       .order("name", { ascending: true })
       .range((page - 1) * items_per_page, page * items_per_page - 1);
 
@@ -42,7 +42,7 @@ export async function CreateAppointment(formData: FormData) {
         name: formData.get("name"),
         contact_number: formData.get("contact_number"),
         service_id: formData.get("service_id"),
-        schedule: formData.get("schedule"),
+        schedule_id: formData.get("schedule_id"),
         problem: formData.get("problem"),
       })
       .select();
@@ -82,11 +82,6 @@ export async function UpdateAppointment(formData: FormData) {
     const { error } = await supabase
       .from("appointments")
       .update({
-        name: formData.get("name"),
-        contact_number: formData.get("contact_number"),
-        service_id: formData.get("service_id"),
-        schedule: formData.get("schedule"),
-        problem: formData.get("problem"),
         completed: formData.get("completed"),
       })
       .eq("id", formData.get("id"))
@@ -142,7 +137,7 @@ export async function GetMyAppointments() {
     const { data: userData } = await supabase.auth.getUser();
     const { data, error } = await supabase
       .from("appointments")
-      .select("*")
+      .select(`*, service_id(*), schedule_id(*)`)
       .eq("user_id", userData?.user?.id || "")
       .order("created_at", { ascending: false });
 
