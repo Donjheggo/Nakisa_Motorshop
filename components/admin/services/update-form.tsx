@@ -1,5 +1,13 @@
 "use client";
 
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { UpdateService } from "@/lib/actions/services";
@@ -20,7 +28,11 @@ export default function UpdateServiceForm({ item }: { item: ServiceT }) {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
 
-    if (!formData.get("name")) {
+    if (
+      !formData.get("name") ||
+      !formData.get("available") ||
+      !formData.get("duration")
+    ) {
       toast.error("Please fill in all the required fields correctly.");
       return;
     }
@@ -68,8 +80,42 @@ export default function UpdateServiceForm({ item }: { item: ServiceT }) {
               required
             />
           </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="duration" className="text-right">
+              Duration
+            </Label>
+            <Input
+              name="duration"
+              id="duration"
+              type="text"
+              placeholder=""
+              className="col-span-3"
+              defaultValue={item.duration}
+              required
+            />
+          </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="duration" className="text-right">
+              Availability
+            </Label>
+            <div className="col-span-3">
+              <Select name="available" defaultValue={String(item.available)}>
+                <SelectTrigger className="w-full">
+                  <SelectValue
+                    placeholder="Select Service"
+                    className="w-full"
+                  />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem value="true">Available</SelectItem>
+                    <SelectItem value="false">Unavailable</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
         </div>
-
         <Button type="submit" disabled={loading}>
           {loading ? <Loader className="animate-spin" /> : "Save"}
         </Button>
