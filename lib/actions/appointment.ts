@@ -32,6 +32,24 @@ export async function GetAppointments(
   }
 }
 
+async function UpdateScheduleAvailability(id: string) {
+  try {
+    const supabase = createClient();
+    const { error } = await supabase
+      .from("schedules")
+      .update({
+        available: false,
+      })
+      .eq("id", id)
+      .select();
+    if (error) {
+      return { error: error.message };
+    }
+  } catch (error) {
+    return { error: error };
+  }
+}
+
 export async function CreateAppointment(formData: FormData) {
   try {
     const supabase = createClient();
@@ -50,6 +68,7 @@ export async function CreateAppointment(formData: FormData) {
     if (error) {
       return { error: error.message };
     }
+    UpdateScheduleAvailability(formData.get("schedule_id") as string);
     revalidatePath("/");
     revalidatePath("/dashboard/appointments");
     return { error: "" };

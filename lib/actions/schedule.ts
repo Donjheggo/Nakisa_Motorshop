@@ -157,7 +157,8 @@ export async function GetScheduleByServiceId(service_id: string) {
     const { error, data } = await supabase
       .from("schedules")
       .select("*")
-      .eq("service_id", service_id);
+      .eq("service_id", service_id)
+      .eq("available", true);
 
     if (error) {
       return [];

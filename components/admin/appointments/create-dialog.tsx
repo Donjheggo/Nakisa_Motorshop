@@ -158,14 +158,21 @@ export default function CreateAppointmentDialog() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
-                      {schedules?.map((item, index) => (
-                        <SelectItem key={index} value={item.id}>
-                          {new Date(item.start_time).toLocaleDateString()} -{" "}
-                          {new Date(item.start_time).toLocaleTimeString()} <br/>
-                          {new Date(item.end_time).toLocaleDateString()} -{" "}
-                          {new Date(item.end_time).toLocaleTimeString()}
-                        </SelectItem>
-                      ))}
+                      {schedules && schedules.length ? (
+                        schedules.map((item, index) => (
+                          <SelectItem key={index} value={item.id}>
+                            {new Date(item.start_time).toLocaleDateString()} -{" "}
+                            {new Date(item.start_time).toLocaleTimeString()}{" "}
+                            <br />
+                            {new Date(
+                              item.end_time
+                            ).toLocaleDateString()} -{" "}
+                            {new Date(item.end_time).toLocaleTimeString()}
+                          </SelectItem>
+                        ))
+                      ) : (
+                        <p className="text-sn">No Available schedule</p>
+                      )}
                     </SelectGroup>
                   </SelectContent>
                 </Select>
