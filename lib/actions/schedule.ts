@@ -41,6 +41,7 @@ export async function CreateSchedule(formData: FormData) {
         service_id: formData.get("service_id"),
         start_time: formData.get("start_time"),
         end_time: formData.get("end_time"),
+        available: true,
       })
       .select();
 
@@ -82,12 +83,13 @@ export async function UpdateSchedules(formData: FormData) {
         service_id: formData.get("service_id"),
         start_time: formData.get("start_time"),
         end_time: formData.get("end_time"),
+        available: formData.get("available"),
       })
       .eq("id", formData.get("id"))
       .select();
 
     if (error) {
-      return { error: error };
+      return { error: error.message };
     }
 
     revalidatePath("/dashboard/schedules");

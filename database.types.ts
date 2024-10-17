@@ -125,6 +125,7 @@ export type Database = {
       }
       schedules: {
         Row: {
+          available: boolean
           created_at: string
           end_time: string
           id: string
@@ -132,6 +133,7 @@ export type Database = {
           start_time: string
         }
         Insert: {
+          available?: boolean
           created_at?: string
           end_time: string
           id?: string
@@ -139,6 +141,7 @@ export type Database = {
           start_time: string
         }
         Update: {
+          available?: boolean
           created_at?: string
           end_time?: string
           id?: string

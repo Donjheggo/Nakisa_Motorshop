@@ -129,6 +129,24 @@ export default function UpdateScheduleForm({ item }: { item: SchedulesT }) {
               required
             />
           </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="available" className="text-right">
+              Service
+            </Label>
+            <div className="col-span-3">
+              <Select name="available" defaultValue={String(item.available)}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select Service" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem value="true">Available</SelectItem>
+                    <SelectItem value="false">Unavailable</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
         </div>
 
         <Button type="submit" disabled={loading}>

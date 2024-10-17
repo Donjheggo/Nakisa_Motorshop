@@ -27,6 +27,7 @@ import { MoreHorizontal } from "lucide-react";
 import { Button } from "../../ui/button";
 import { DropdownMenuSeparator } from "@radix-ui/react-dropdown-menu";
 import UpdateButton from "./update-button";
+import { Badge } from "@/components/ui/badge";
 
 export default async function SchedulesTable({
   searchQuery,
@@ -56,6 +57,7 @@ export default async function SchedulesTable({
               <TableHead className="table-cell">Service</TableHead>
               <TableHead className="table-cell">Start time</TableHead>
               <TableHead className="table-cell">End time</TableHead>
+              <TableHead className="table-cell">Availability</TableHead>
 
               <TableHead>
                 <span className="sr-only">Actions</span>
@@ -77,6 +79,13 @@ export default async function SchedulesTable({
                 <TableCell className="font-normal">
                   {new Date(item.end_time).toLocaleDateString()} -{" "}
                   {new Date(item.end_time).toLocaleTimeString()}
+                </TableCell>
+                <TableCell>
+                  {item.available ? (
+                    <Badge variant="default">Available</Badge>
+                  ) : (
+                    <Badge variant="outline">Unavailable</Badge>
+                  )}
                 </TableCell>
                 <TableCell>
                   <DropdownMenu>
