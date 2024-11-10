@@ -66,7 +66,7 @@ export default async function SalesTable({
                 </TableCell>
                 <TableCell className="font-normal">{item.quantity}</TableCell>
                 <TableCell className="font-normal">
-                  ₱{item.product_id.price * item.quantity}
+                  ₱{item.total_price}
                 </TableCell>
               </TableRow>
             ))}

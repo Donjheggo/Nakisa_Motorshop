@@ -85,7 +85,7 @@ export default function CreateSalesDialog() {
                 name="name"
                 id="name"
                 type="text"
-                placeholder="Engine Oil"
+                placeholder=""
                 className="col-span-3"
                 required
               />

@@ -2,6 +2,7 @@
 
 import { createClient } from "../supabase/server";
 import { revalidatePath } from "next/cache";
+import { GetProductById } from "./products";
 
 export async function GetSales(
   searchQuery: string,
@@ -12,8 +13,8 @@ export async function GetSales(
     const supabase = createClient();
     const query = supabase
       .from("sales")
-      .select(`*, product_id(name, quantity, price)`)
-      .order("name", { ascending: true })
+      .select(`*, product_id(*)`)
+      .order("created_at", { ascending: true })
       .range((page - 1) * items_per_page, page * items_per_page - 1);
 
     const { data, error } = searchQuery
@@ -34,6 +35,19 @@ export async function GetSales(
 
 export async function CreateSale(formData: FormData) {
   try {
+    const product = await GetProductById(
+      formData.get("product_id")?.toString() || ""
+    );
+
+    if (!product) {
+      return { error: "Product not found" };
+    }
+
+    const quantity = parseInt(formData.get("quantity")?.toString() || "0");
+    if (isNaN(quantity) || quantity <= 0) {
+      return { error: "Invalid quantity" };
+    }
+
     const supabase = createClient();
     const { error } = await supabase
       .from("sales")
@@ -41,6 +55,7 @@ export async function CreateSale(formData: FormData) {
         name: formData.get("name"),
         quantity: formData.get("quantity"),
         product_id: formData.get("product_id"),
+        total_price: product.price * quantity,
       })
       .select();
 
@@ -127,6 +142,40 @@ export async function GetTotalSales() {
     return data.length || 0;
   } catch (error) {
     console.error(error);
+    return 0;
+  }
+}
+
+export async function GetWeeklySales() {
+  try {
+    const supabase = createClient();
+
+    // Calculate date 7 days ago
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+    const { error, data } = await supabase
+      .from("sales")
+      .select("total_price")
+      .gte("created_at", sevenDaysAgo.toISOString())
+      .lte("created_at", new Date().toISOString())
+      .throwOnError();
+
+    if (error) {
+      console.error("Error fetching sales:", error);
+      return 0;
+    }
+
+    // Sum all total_price values
+    const totalSales = data.reduce(
+      (sum, sale) => sum + (sale.total_price || 0),
+      0
+    );
+
+    // Return with 2 decimal places
+    return Number(totalSales.toFixed(2));
+  } catch (error) {
+    console.error("Error calculating total sales:", error);
     return 0;
   }
 }

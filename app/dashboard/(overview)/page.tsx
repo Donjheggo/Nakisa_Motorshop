@@ -4,37 +4,41 @@ import SalesTable from "@/components/admin/dashboard/sales-table";
 import { GetTotalAppointments } from "@/lib/actions/appointment";
 import { GetTotalProducts } from "@/lib/actions/products";
 import { GetTotalServices } from "@/lib/actions/services";
-import { GetTotalUsers } from "@/lib/actions/users";
-import { NotepadText, Bike, HandPlatter, UsersRound } from "lucide-react";
+import { GetWeeklySales } from "@/lib/actions/sales";
+import { NotepadText, Bike, HandPlatter, HandCoins } from "lucide-react";
 
 export default async function Dashboard() {
-  const [appointments, products, services, users] = await Promise.all([
+  const [appointments, products, services, weekly_sales] = await Promise.all([
     GetTotalAppointments(),
     GetTotalProducts(),
     GetTotalServices(),
-    GetTotalUsers(),
+    GetWeeklySales(),
   ]);
 
   const cards = [
     {
       title: "Total Appointments",
+      subtitle: "All time",
       number: appointments,
       icon: <NotepadText size={25} className="text-primary" />,
     },
     {
       title: "Total Products",
+      subtitle: "All time",
       number: products,
       icon: <Bike size={25} className="text-primary" />,
     },
     {
       title: "Total Services",
+      subtitle: "All time",
       number: services,
       icon: <HandPlatter size={25} className="text-primary" />,
     },
     {
-      title: "Total Users",
-      number: users,
-      icon: <UsersRound size={25} className="text-primary" />,
+      title: "Total Sales",
+      subtitle: "Last 7 days",
+      number: weekly_sales,
+      icon: <HandCoins size={25} className="text-primary" />,
     },
   ];
 
