@@ -63,7 +63,13 @@ export default async function AppointmentsTable({
                 <TableCell>{item.contact_number}</TableCell>
                 <TableCell>{item.service_id.name}</TableCell>
                 <TableCell>
-                  {new Date(item.schedule).toLocaleDateString()}
+                  {new Date(item.schedule_id.start_time).toLocaleTimeString()} -{" "}
+                  {new Date(item.schedule_id.start_time).toLocaleDateString()}{" "}
+                  <br />
+                  {new Date(
+                    item.schedule_id.end_time
+                  ).toLocaleTimeString()} -{" "}
+                  {new Date(item.schedule_id.end_time).toLocaleDateString()}
                 </TableCell>
                 <TableCell>{item.problem}</TableCell>
               </TableRow>
